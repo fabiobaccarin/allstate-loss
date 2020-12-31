@@ -1,10 +1,5 @@
 """
 Split data into train (research) and test (development) sets
-
-Strategy:
-    total: 588k
-    research: 10% = 58.8k
-    development: 90% = 529.2k
 """
 
 import pandas as pd
