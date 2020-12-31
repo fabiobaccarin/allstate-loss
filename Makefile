@@ -6,3 +6,6 @@ split:
 
 profiles:
 	python scripts/profiles.py
+
+transform-y:
+	python scripts/transform_y.py
