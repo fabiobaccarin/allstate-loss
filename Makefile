@@ -3,3 +3,6 @@ env:
 
 split:
 	python scripts/split.py
+
+profiles:
+	python scripts/profiles.py
