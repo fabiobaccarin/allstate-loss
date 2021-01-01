@@ -17,4 +17,4 @@ def skewTest(
     v = method(vals, **kws)
     _, p = ss.skewtest(v)
     delta = time.time() - start
-    return {'Insignificance': 1/-np.log10(p[0]), 'Time': delta * 1000}
+    return {'Insignificance': 1/-np.log10(p), 'Time': delta * 1000}

@@ -11,10 +11,9 @@ I did all three of them. For each of them, I recorded the time required to use i
 
 |Transformation|Insignificance|Time|CostEffectivenessRatio|
 |:--- |---: |---: |---: |
-|Yeo-Johnson|14.91|278.46|18.68|
-|Quantile Transformer|1.28|65.00|50.63|
-|Log|0.02|5.36|321.26|
-
+|Yeo-Johnson|14.91|281.56|18.89|
+|Quantile Transformer|1.28|69.77|54.35|
+|Log|0.02|5.51|330.30|
 
 The rationale here is very simple. The cost of running different transformations is the time required to use them, for time is the factor driving all sorts of costs (financial or computational). The benefit we obtain from running them here is the reduction in skewness, which I measured by the inverse of the scale p-value on the skewness test. So, the surer we can be about the skewness not being different from zero, the greater the benefit. I called this metric "Insignificance". When I divide the cost by the benefit, I get how much it costs to have an arbitrary amount of confidence in the symmetry of our distribution.
 
