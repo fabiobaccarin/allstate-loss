@@ -43,6 +43,7 @@ loss = pd.read_csv(p.joinpath('data', 'raw', 'train.csv'), usecols=['loss'])
     ),
     }).T
     .assign(CostEffectivenessRatio=lambda df: df['Time'].div(df['Insignificance']))
+    .sort_values('CostEffectivenessRatio')
     .to_html(
         buf=p.joinpath('reports', 'tables', '01YTransformations.html'),
         float_format='{:.2f}'.format,
