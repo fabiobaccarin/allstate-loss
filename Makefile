@@ -9,3 +9,6 @@ profiles:
 
 transform-y:
 	python scripts/transform_y.py
+
+variance:
+	python scripts/variance.py
