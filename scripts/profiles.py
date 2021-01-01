@@ -13,13 +13,11 @@ import sys; sys.path.append(str(p))
 
 from src.logger import LOGGER
 
-# Load data
 LOGGER.info('Load data')
 res = pd.read_pickle(p.joinpath('data', 'interim', 'research.pkl'))
 dev = pd.read_pickle(p.joinpath('data', 'interim', 'development.pkl'))
 
 
-# Profile on research
 LOGGER.info('Profile on research')
 (
     ProfileReport(
@@ -31,7 +29,6 @@ LOGGER.info('Profile on research')
     .to_file(p.joinpath('reports', 'profiles', 'research.html'))
 )
 
-# Profile on development
 LOGGER.info('Profile on development')
 (
     ProfileReport(
