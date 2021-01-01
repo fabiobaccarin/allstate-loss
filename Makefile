@@ -12,3 +12,6 @@ transform-y:
 
 variance:
 	python scripts/variance.py
+
+skew:
+	python scripts/skew.py

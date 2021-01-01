@@ -21,3 +21,12 @@ So, we see that Yeo-Johnson has the smallest ratio, meaning that it is the one f
 
 ## Dropping categorical features with no variance after preprocessing
 A quick look at Pandas Profiling's results hints that many categorical features will be constant after preprocessing. So I made a script to find out which of them will be. I found that 57 out of 116 features will be in the group (49 percent).
+
+## Continuos preprocessing
+For continuous features, the Quantile Transformation is the most cost-effective transformation to resolve skewness. This is shown in Table 2 below.
+
+|Transformation|Insignificance|Time|CostEffectivenessRatio|
+|:--- |---: |---: |---: |
+|Quantile Transform|20.76|9.42|0.45|
+|Yeo-Johnson|1.70|16.97|9.98|
+|Logarithm|0.03|1.35|40.85|
