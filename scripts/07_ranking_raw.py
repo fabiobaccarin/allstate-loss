@@ -40,8 +40,7 @@ LOGGER.info('Process categorical features')
 catf = pd.DataFrame(
     data=make_pipeline(
         e.CategoricalGrouper(),
-        e.CategoricalEncoder(),
-        StandardScaler()
+        e.CategoricalEncoder()
     ).fit_transform(X.filter(like='cat').drop(labels=noVarFeatures, axis=1), y),
     columns=X.filter(like='cat').drop(labels=noVarFeatures, axis=1).columns,
     index=X.index
