@@ -2,16 +2,16 @@ env:
 	conda env create -f env.yml
 
 split:
-	python scripts/split.py
+	python scripts/01_split.py
 
 profiles:
-	python scripts/profiles.py
+	python scripts/02_profiles.py
 
 transform-y:
-	python scripts/transform_y.py
+	python scripts/03_transform_y.py
 
 variance:
-	python scripts/variance.py
+	python scripts/04_variance.py
 
 skew:
-	python scripts/skew.py
+	python scripts/05_skew.py
