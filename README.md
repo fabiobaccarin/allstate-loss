@@ -9,7 +9,7 @@ Because this is a regression problem, it is fundamental to understand the distri
 
 I did all three of them. For each of them, I recorded the time required to use it and the respective p-value (on a negative logarithm scale) on the skewness test. To decide among them, I used a cost-effectiveness analysis, dividing the time required to fit (in milliseconds) by the inverse of the scaled p-value. The results are in Table 1 below.
 
-|Transformation|Insignificance|Time|CostEffectivenessRatio|
+|Transformation|Insignificance|Time|Cost Effectiveness Ratio|
 |:--- |---: |---: |---: |
 |Yeo-Johnson|14.91|281.56|18.89|
 |Quantile Transformer|1.28|69.77|54.35|
@@ -25,8 +25,33 @@ A quick look at Pandas Profiling's results hints that many categorical features 
 ## Continuos preprocessing
 For continuous features, the Quantile Transformation is the most cost-effective transformation to resolve skewness. This is shown in Table 2 below.
 
-|Transformation|Insignificance|Time|CostEffectivenessRatio|
+|Transformation|Insignificance|Time|Cost Effectiveness Ratio|
 |:--- |---: |---: |---: |
 |Quantile Transform|20.76|9.42|0.45|
 |Yeo-Johnson|1.70|16.97|9.98|
 |Logarithm|0.03|1.35|40.85|
+
+Many continuous features are highly correlated (Pearson correlation above 75% percent), as shown in Figure 1 below.
+
+![Figure 1: Correlations above 75% in continuous features](reports/figures/01ContFeaturesCorr75Matrix.png)
+
+So solve this, I chose to do a principal component analysis. In order to decide how many components to retain, I computed how much explained variance I get for each component. The results are in Table 3 below:
+
+|PCA Component|Explained Variance|Accumulated Explained Variance|
+|:--- |---: |---: |
+|Component 1|43.99%|43.99%|
+|Component 2|13.19%|57.18%|
+|Component 3|10.29%|67.47%|
+|Component 4|7.18%|74.65%|
+|Component 5|6.78%|81.43%|
+|Component 6|5.60%|87.03%|
+|Component 7|3.85%|90.89%|
+|Component 8|2.79%|93.67%|
+|Component 9|2.26%|95.94%|
+|Component 10|1.94%|97.88%|
+|Component 11|1.18%|99.06%|
+|Component 12|0.54%|99.60%|
+|Component 13|0.36%|99.96%|
+|Component 14|0.04%|100.00%|
+
+Because there is only 14 continuous features, I decided to retain 11 components, accounting for a little over 99% of the total variance in the continuous feature matrix.

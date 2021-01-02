@@ -15,3 +15,6 @@ variance:
 
 skew:
 	python scripts/05_skew.py
+
+pca:
+	python scripts/06_pca.py
