@@ -61,3 +61,25 @@ pca = PCA(random_state=0).fit(X)
         bold_rows=False
     )
 )
+
+LOGGER.info(r'Figure 2: PCA weights')
+fig, _ = plt.subplots(figsize=A4_DIMS)
+ax = sns.heatmap(
+    data=pd.DataFrame(
+        data=pca.components_,
+        columns=X.columns,
+        index=[f'Component {c+1}' for c in range(len(X.columns))]
+    ),
+    cmap='RdBu',
+    annot=True,
+    fmt='.2f',
+    cbar=False
+)
+ax.set(title=r'Figure 2: PCA weights')
+plt.tight_layout()
+fig.savefig(
+    fname=p.joinpath('reports', 'figures', '02PCAWeights.png'),
+    dpi=800,
+    format='png'
+)
+plt.close(fig=fig)

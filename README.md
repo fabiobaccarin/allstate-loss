@@ -54,4 +54,6 @@ So solve this, I chose to do a principal component analysis. In order to decide 
 |Component 13|0.36%|99.96%|
 |Component 14|0.04%|100.00%|
 
-Because there is only 14 continuous features, I decided to retain 11 components, accounting for a little over 99% of the total variance in the continuous feature matrix.
+Because there is only 14 continuous features, I decided to retain 11 components, accounting for a little over 99% of the total variance in the continuous feature matrix. To understand how each continuous feature is used, I plotted the weights of each feature for every component. The result is shown in Figure 2 below.
+
+![Figure 2: PCA weights](reports/figures/02PCAWeights.png)
