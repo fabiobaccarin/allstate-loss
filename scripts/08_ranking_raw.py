@@ -70,7 +70,7 @@ ProfileReport(
 LOGGER.info('Create ranking')
 ranking = Ranker().rank(X, y)
 
-LOGGER.info('Figure 3: feature ranking')
+LOGGER.info('Figure 4: Volcano plot for features')
 fig, ax = plt.subplots(figsize=A4_DIMS)
 ax = sns.scatterplot(
     x=ranking['Statistical Significance'],
@@ -78,7 +78,7 @@ ax = sns.scatterplot(
     s=100,
 )
 ax.set(
-    title='Figure 3: Volcano plot for features',
+    title='Figure 4: Volcano plot for features',
     xlabel='Statistical Significance (-log10(p-value))',
     ylabel='Association Strength (%)'
 )
@@ -86,17 +86,17 @@ ax.axvline(x=0, color='black', lw=2)
 ax.axhline(y=0, color='black', lw=2)
 plt.tight_layout()
 fig.savefig(
-    fname=p.joinpath('reports', 'figures', '03FeatureRanking.png'),
+    fname=p.joinpath('reports', 'figures', '04FeatureRanking.png'),
     dpi=800,
     format='png'
 )
 plt.close(fig)
 
-LOGGER.info('Table 4: feature ranking')
+LOGGER.info('Table 5: feature ranking')
 ranking['Rank'] = ranking['Association Strength'].abs().rank(ascending=False)
 ranking['Group'] = np.ceil(ranking['Rank'].div(5))
 ranking.sort_values('Rank').to_html(
-    buf=p.joinpath('reports', 'tables', '04FeatureRanking.html'),
+    buf=p.joinpath('reports', 'tables', '05FeatureRanking.html'),
     float_format='{:.2f}'.format,
     bold_rows=False
 )

@@ -158,4 +158,4 @@ We see many features highly significant and strong. As shown in Table 4 below, t
 Categorical features dominate by far. The strongest continuous feature is `cont2` with about 9.5% association. It is in the 30th place.
 
 ## Feature selection
-Because doing nothing is always an option, I ran a dummy regressor that always predicts the mean loss. I needed this to measure the benefit in predictive power between models in relation to this benchmark in percentage. This way, for each model I can compute how much the RMSE drops compared to the cost of running the model (represented by the time to fit)
+Because doing nothing is always an option, I ran a dummy regressor that always predicts the mean loss. I needed this to measure the benefit in predictive power between models in relation to this benchmark in percentage. This way, for each model I can compute how much the RMSE drops compared to the cost of running the model (represented by the time to fit) for each model.
