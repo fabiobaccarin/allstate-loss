@@ -1,24 +1,20 @@
-{
-    "cat": [
-        "cat2",
-        "cat3",
-        "cat8",
-        "cat9",
-        "cat86",
-        "cat90",
-        "cat95",
-        "cat98",
-        "cat99",
-        "cat102",
-        "cat108"
-    ],
-    "cont": [
-        "cont1",
-        "cont6",
-        "cont7",
-        "cont9",
-        "cont10",
-        "cont11",
-        "cont12"
-    ]
-}
+[
+    "cat2",
+    "cat3",
+    "cat8",
+    "cat9",
+    "cat86",
+    "cat90",
+    "cat95",
+    "cat98",
+    "cat99",
+    "cat102",
+    "cat108",
+    "cont1",
+    "cont6",
+    "cont7",
+    "cont9",
+    "cont10",
+    "cont11",
+    "cont12"
+]

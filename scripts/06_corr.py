@@ -55,14 +55,10 @@ LOGGER.info('Find correlations')
 corr = catf.join(contf).corr()
 del catf, contf
 np.fill_diagonal(corr.values, 0)
-cols = corr.columns[corr.gt(0.75).any(axis=1)].to_list()
 
 LOGGER.info('Persist as JSON')
 json.dump(
-    obj={
-        'cat': [c for c in cols if c.startswith('cat')],
-        'cont': [c for c in cols if c.startswith('cont')]
-    },
+    obj=corr.columns[corr.gt(0.75).any(axis=1)].to_list(),
     fp=open(file=p.joinpath('src', 'meta', 'Correlated.json'), mode='w'),
     indent=4
 )
