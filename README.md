@@ -31,37 +31,49 @@ For continuous features, the Quantile Transformation is the most cost-effective 
 |Yeo-Johnson|1.70|16.97|9.98|
 |Logarithm|0.03|1.35|40.85|
 
-Many continuous features are highly correlated (Pearson correlation above 75% percent), as shown in Figure 1 below.
+## Correlation analysis
+Many features are highly correlated (Pearson correlation above 75%), as shown in Figure 1 below. There are 18 features in such a situation, both categorical (after preprocessing) and numerical.
 
-![Figure 1: Correlations above 75% in continuous features](reports/figures/01ContFeaturesCorr75Matrix.png)
+![Figure 1: Correlations above 75%](reports/figures/01ContFeaturesCorr75Matrix.png)
 
-So solve this, I chose to do a principal component analysis. In order to decide how many components to retain, I computed how much explained variance I get for each component. The results are in Table 3 below:
+So solve this, I chose to do a PCA. In order to decide how many components to retain, I computed how much explained variance I get for each component. I processed continuous and categorical features seperately because continuous features have much larger variance. This induce a bias in PCA towards them.
+
+Curiously, for both features the number of selected components was 6, accounting for a little over 99% of total variation. The explained variance for each component are shown in Tables 3 and 4 below.
 
 |PCA Component|Explained Variance|Accumulated Explained Variance|
 |:--- |---: |---: |
-|Component 1|43.99%|43.99%|
-|Component 2|13.19%|57.18%|
-|Component 3|10.29%|67.47%|
-|Component 4|7.18%|74.65%|
-|Component 5|6.78%|81.43%|
-|Component 6|5.60%|87.03%|
-|Component 7|3.85%|90.89%|
-|Component 8|2.79%|93.67%|
-|Component 9|2.26%|95.94%|
-|Component 10|1.94%|97.88%|
-|Component 11|1.18%|99.06%|
-|Component 12|0.54%|99.60%|
-|Component 13|0.36%|99.96%|
-|Component 14|0.04%|100.00%|
+|Component 1|62.78%|62.78%|
+|Component 2|14.81%|77.59%|
+|Component 3|11.49%|89.09%|
+|Component 4|4.77%|93.85%|
+|Component 5|4.45%|98.30%|
+|Component 6|0.97%|99.26%|
+|Component 7|0.24%|99.51%|
+|Component 8|0.24%|99.74%|
+|Component 9|0.18%|99.92%|
+|Component 10|0.08%|100.00%|
+|Component 11|0.00%|100.00%|
 
-Because there is only 14 continuous features, I decided to retain 11 components, accounting for a little over 99% of the total variance in the continuous feature matrix. To understand how each continuous feature is used, I plotted the weights of each feature for every component. The result is shown in Figure 2 below.
+|PCA Component|ExplainedVariance|AccumulatedExplainedVariance|
+|:--- |---: |---: |
+|Component 1|77.34%|77.34%|
+|Component 2|12.17%|89.51%|
+|Component 3|4.42%|93.93%|
+|Component 4|3.38%|97.31%|
+|Component 5|1.57%|98.87%|
+|Component 6|1.04%|99.91%|
+|Component 7|0.09%|100.00%|
 
-![Figure 2: PCA weights](reports/figures/02PCAWeights.png)
+
+Because the number of components is relatively low, I decided to retain components to account for a little over 99% of the total. To understand how each feature is used, I plotted the weights of each feature for every component. The results are shown in Figures 2 and 3 below.
+
+![Figure 2: PCA weights - categorical features](reports/figures/02CatPCAWeights.png)
+![Figure 3: PCA weights - continuous features](reports/figures/03ContPCAWeights.png)
 
 ## Feature ranking
 To understand which features are the best, I did a simple ranking using Spearman's correlation after some preprocessing of the target and of categorical features. We can visualize some of them in Figure 3 below.
 
-![Figure 3: volcano plot for features](reports/figures/03FeatureRanking.png)
+![Figure 4: volcano plot for features](reports/figures/04FeatureRanking.png)
 
 We see many features highly significant and strong. As shown in Table 4 below, the best features are categorical and reach up to 47% correlation with the target. Naturally, their statistical significance is so great that Numpy setted them to inifinity. Here, I assigned 1,000 to those features in to make them appear in Figure 3.
 
@@ -144,3 +156,6 @@ We see many features highly significant and strong. As shown in Table 4 below, t
 |cat99|-0.22|0.12|75.00|15.00|
 
 Categorical features dominate by far. The strongest continuous feature is `cont2` with about 9.5% association. It is in the 30th place.
+
+## Feature selection
+Because doing nothing is always an option, I ran a dummy regressor that always predicts the mean loss. I needed this to measure the benefit in predictive power between models in relation to this benchmark in percentage. This way, for each model I can compute how much the RMSE drops compared to the cost of running the model (represented by the time to fit)
