@@ -18,3 +18,6 @@ skew:
 
 pca:
 	python scripts/06_pca.py
+
+ranking-raw:
+	python scripts/07_ranking_raw.py
