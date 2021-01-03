@@ -27,3 +27,6 @@ ranking-raw:
 
 profile-final:
 	python scripts/09_profile_final.py
+
+ranking-final:
+	python scripts/10_ranking_final.py
