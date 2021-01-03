@@ -36,3 +36,6 @@ feature-selection:
 
 features:
 	python scripts/12_features.py
+
+fits:
+	python scripts/13_fits.py
