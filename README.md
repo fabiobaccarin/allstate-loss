@@ -34,7 +34,7 @@ For continuous features, the Quantile Transformation is the most cost-effective 
 ## Correlation analysis
 Many features are highly correlated (Pearson correlation above 75%), as shown in Figure 1 below. There are 18 features in such a situation, both categorical (after preprocessing) and numerical.
 
-![Figure 1: Correlations above 75%](reports/figures/01ContFeaturesCorr75Matrix.png)
+![Figure 1: Correlations above 75%](reports/figures/01FeaturesCorr75Matrix.png)
 
 So solve this, I chose to do a PCA. In order to decide how many components to retain, I computed how much explained variance I get for each component. I processed continuous and categorical features seperately because continuous features have much larger variance. This induce a bias in PCA towards them.
 
@@ -158,4 +158,41 @@ We see many features highly significant and strong. As shown in Table 4 below, t
 Categorical features dominate by far. The strongest continuous feature is `cont2` with about 9.5% association. It is in the 30th place.
 
 ## Feature selection
-Because doing nothing is always an option, I ran a dummy regressor that always predicts the mean loss. I needed this to measure the benefit in predictive power between models in relation to this benchmark in percentage. This way, for each model I can compute how much the RMSE drops compared to the cost of running the model (represented by the time to fit) for each model.
+Because doing nothing is always an option, I ran a dummy regressor that always predicts the mean loss. I needed this to measure the benefit in predictive power between models in relation to this benchmark. This way, for each model I can compute how much the RMSE drops compared to the cost of running the model (represented by the time to fit) for each model. Because the target is transformed, for each model I calculate the difference in RMSE against the dummy model and then apply the inverse transformation to get the reduction in RMSE in the original target units (dollars in this case, I presume).
+
+Each model is defined by the inclusion of a group of 5 features, where each group is progressively less relevant for predicting the target. So, the first model has only the first group (the top 5 most important features), the second has the first and the second groups, and so on. Every model is a Ridge regression (because I took additional measures to avoid problems in correlated features). For every model, the time needed to fit it is compared to the reduction in RMSE in dollars.
+
+The number of groups of features to include is determined by the cost-effectiveness ratio (CER). This ratio tells us how many milliseconds (ms) it costs to reduce the RMSE by $1. The best model is the one which has the lowest CER, meaning that is the one for which the reduction in RMSE compensates best for the costs of running it. The CER for each model in shown in Table 6 below.
+
+|Experiment|Mean fit time (ms)|Mean score time (ms)|Mean reduction in test RMSE ($)|Fit time standard error (ms)|Score time standard error (ms)|Reduction in test RMSE standard error ($)|Cost-effectiveness ratio|
+|:--- |---: |---: |---: |---: |---: |---: |---: |
+|selection01 (05 features)|36.55|2.55|2466.93|0.63|0.04|1.98|0.02|
+|selection02 (10 features)|55.78|2.50|2499.26|0.99|0.05|2.02|0.02|
+|selection03 (15 features)|77.54|2.58|2504.48|1.21|0.05|2.01|0.03|
+|selection04 (20 features)|99.17|2.65|2511.50|1.20|0.04|2.57|0.04|
+|selection05 (25 features)|117.02|2.72|2536.10|1.57|0.05|2.19|0.05|
+|selection06 (30 features)|1001.56|2.96|2571.21|6.35|0.04|2.04|0.39|
+|selection07 (35 features)|2220.57|3.41|2598.49|15.44|0.06|2.04|0.86|
+|selection08 (40 features)|5916.54|3.94|2608.60|69.19|0.13|2.32|2.27|
+|selection09 (45 features)|6571.64|4.17|2611.35|70.23|0.26|2.04|2.52|
+|selection10 (50 features)|6835.60|4.14|2618.01|72.72|0.16|2.59|2.61|
+|selection11 (55 features)|7298.16|3.98|2622.61|77.08|0.11|2.12|2.78|
+|selection12 (60 features)|8043.27|4.22|2624.52|73.40|0.19|2.08|3.07|
+|selection13 (65 features)|8682.54|4.21|2627.61|72.19|0.13|2.13|3.31|
+|selection14 (69 features)|9345.43|4.52|2628.68|83.66|0.18|2.29|3.56|
+
+We can see that using just the top 5 features () is the best option despite it not being the one resulting in the biggest reduction in RMSE. The CER for this model is 0.02 ms/$.
+
+## Model comparison
+The same analysis was done for model comparison. The results are in Table 7 below.
+
+|Model|Mean fit time (ms)|Mean score time (ms)|Mean reduction in test RMSE ($)|Fit time standard error (ms)|Score time standard error (ms)|Reduction in test RMSE standard error ($)|Cost-effectiveness ratio|
+|:--- |---: |---: |---: |---: |---: |---: |---: |
+|decision_tree|723.46|63.67|2491.47|7.97|1.07|0.69|0.32|
+|regression|741.40|64.21|2465.93|7.92|1.21|1.28|0.33|
+|lasso|736.22|66.45|2257.27|5.88|1.26|7.78|0.36|
+|elastic_net|799.92|75.72|2171.76|12.19|1.74|2.31|0.40|
+|ridge|1632.26|69.79|2462.67|35.11|1.72|1.38|0.69|
+|light_gbm|7318.91|953.08|2490.92|51.29|12.46|0.69|3.32|
+
+We can see that decision tree is the best model, with CER equal to 0.32 ms/$, followed closely by regression (0.33 ms/$). Notice that decision tree also has the highest reduction in RMSE ($2,491.47), so it would be the best model also if we judged only by RMSE. Notice how LightGBM is the second in RMSE reduction, but is the last in CER: it costs so much to train and predict that its lower RMSE doesn't compensate. For this model, it costs 3.32 ms for every dollar of reduction in RMSE.
