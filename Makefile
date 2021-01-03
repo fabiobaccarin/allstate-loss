@@ -16,8 +16,14 @@ variance:
 skew:
 	python scripts/05_skew.py
 
+corr:
+	python scripts/06_corr.py
+
 pca:
-	python scripts/06_pca.py
+	python scripts/07_pca.py
 
 ranking-raw:
-	python scripts/07_ranking_raw.py
+	python scripts/08_ranking_raw.py
+
+profile-final:
+	python scripts/09_profile_final.py
