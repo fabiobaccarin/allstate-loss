@@ -1,7 +1,9 @@
+import joblib
 import itertools
 import pandas as pd
 import numpy as np
-from pandas_profiling import ProfileReport
+from sklearn.dummy import DummyRegressor
+from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import cross_validate, RepeatedKFold
 from pathlib import Path
@@ -16,7 +18,7 @@ from src.ranker import Ranker
 
 
 CROSS_VAL_OPTS = {
-    'scoring': 'r2',
+    'scoring': 'neg_root_mean_squared_error',
     'cv': RepeatedKFold(n_splits=5, n_repeats=20),
     'n_jobs': 3,
     'return_train_score': False,
@@ -31,23 +33,21 @@ X = df.drop(labels='loss', axis=1)
 y = df['loss'].copy()
 
 LOGGER.info('Process target')
-y = pp.TargetPreprocessor().fit_transform(y)
+tp = pp.TargetPreprocessor() # will be needed to convert back to y original units
+y = tp.fit_transform(y)
 
-LOGGER.info('Prepare X')
+LOGGER.info('Process X')
 X = pp.Preprocessor().fit_transform(X, y)
 
-LOGGER.info('Profile final data')
-ProfileReport(
-    df=X.join(y),
-    config_file=p.joinpath('src', 'ProfileConf.yml'),
-    title='Final dataset'
-).to_file(p.joinpath('reports', 'profiles', 'final.html'))
+LOGGER.info('Prepare dummy regressor')
+dummyRMSE = mean_squared_error(
+    y_true=y,
+    y_pred=DummyRegressor(strategy='mean').fit(X, y).predict(X),
+    squared=False
+)
 
-LOGGER.info('Create ranking')
-rnk = Ranker().rank(X, y)
-rnk['Rank'] = rnk['Association Strength'].abs().rank(ascending=False)
-rnk['Group'] = np.ceil(rnk['Rank'].div(5))
-rnk.to_pickle(p.joinpath('src', 'meta', 'Ranking.pkl'))
+LOGGER.info('Load ranking')
+rnk = joblib.load(p.joinpath('src', 'meta', 'Ranking.pkl'))
 
 LOGGER.info('Get groups of features')
 groups = [
@@ -66,7 +66,7 @@ tbl = (
     bm.assign(
         fit_time=lambda df: df['fit_time'].mul(1000),
         score_time=lambda df: df['score_time'].mul(1000),
-        test_score=lambda df: df['test_score'].mul(100)
+        test_score=lambda df: tp.inverse_transform(df['test_score'].add(dummyRMSE))
     )
     .groupby('experiment')
 )
@@ -81,10 +81,10 @@ LOGGER.info('Table 6: Feature selection')
     .rename(columns={
         'fit_time_mean': 'Mean fit time (ms)',
         'score_time_mean': 'Mean score time (ms)',
-        'test_score_mean': 'Mean test R2 (%)',
+        'test_score_mean': 'Mean reduction in test RMSE ($)',
         'fit_time_stderr': 'Fit time standard error (ms)',
         'score_time_stderr': 'Score time standard error (ms)',
-        'test_score_stderr': 'Test R2 standard error (%)',
+        'test_score_stderr': 'Reduction in test RMSE standard error ($)',
         'cer': 'Cost-effectiveness ratio'
     })
     .to_html(

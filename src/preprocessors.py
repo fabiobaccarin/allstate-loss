@@ -36,6 +36,13 @@ class TargetPreprocessor(BaseEstimator, TransformerMixin):
             index=X.index
         )
 
+    def inverse_transform(self, X: pd.Series) -> pd.Series:
+        return pd.Series(
+            data=self.preprocessor.inverse_transform(X.values.reshape(-1, 1)).flatten(),
+            name='loss',
+            index=X.index
+        )
+
 
 class Preprocessor(BaseEstimator, TransformerMixin):
     """ Applies preprocessing of features, with a pipeline for different types of features """
