@@ -1,7 +1,3 @@
-"""
-Split data into train (research) and test (development) sets
-"""
-
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from pathlib import Path

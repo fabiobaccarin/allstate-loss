@@ -1,7 +1,3 @@
-"""
-PCA analysis of continuous features
-"""
-
 import json
 import typing as t
 import pandas as pd

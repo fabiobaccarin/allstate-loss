@@ -1,7 +1,3 @@
-"""
-Pandas profile of datasets
-"""
-
 import pandas as pd
 from pandas_profiling import ProfileReport
 from pathlib import Path
