@@ -30,3 +30,9 @@ profile-final:
 
 ranking-final:
 	python scripts/10_ranking_final.py
+
+feature-selection:
+	python scripts/11_feature_selection.py
+
+features:
+	python scripts/12_features.py
