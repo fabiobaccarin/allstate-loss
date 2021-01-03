@@ -39,3 +39,6 @@ features:
 
 fits:
 	python scripts/13_fits.py
+
+model-eval:
+	python scripts/14_model_eval.py
